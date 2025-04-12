@@ -1,11 +1,18 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
-    <header className="bg-gray-800 text-white p-4 flex justify-between items-center">
-      <h1 className="text-2xl font-bold">Book Ride</h1>
-      <nav>
-        <ul className="flex space-x-4">
+    <header className="bg-neutral-950 text-white p-4  px-10 flex justify-between items-center">
+      <Link to="/">
+        <img
+          src="https://e7.pngegg.com/pngimages/230/701/png-clipart-ride-kit-meets-covington-ytv-amazon-com-book-rides-television-text.png"
+          alt=""
+          className="w-24 h-auto rounded-xl shadow-lg"
+        />
+      </Link>
+      <nav className="flex items-center space-x-8">
+        <ul className="flex space-x-8 mb-2 ">
           <li>
             <a href="/" className="hover:text-gray-400">
               Home
@@ -22,6 +29,11 @@ const Header = () => {
             </a>
           </li>
         </ul>
+        <Link to="/booking">
+          <button className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition duration-300">
+            Book ride
+          </button>
+        </Link>
       </nav>
     </header>
   );

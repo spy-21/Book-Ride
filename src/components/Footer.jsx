@@ -1,9 +1,9 @@
 import React from "react";
 const Footer = () => {
   return (
-    <footer className="bg-gray-800 text-white p-4 text-center">
+    <footer className="bg-gray-800 text-white p-16 text-center h-full">
       <p>&copy; {new Date().getFullYear()} Book Ride. All rights reserved.</p>
-      <div className="flex justify-center space-x-4 mt-2">
+      <div className="flex justify-center space-x-4 mt-2 ">
         <a href="#privacy" className="hover:text-gray-400">
           Privacy Policy
         </a>
