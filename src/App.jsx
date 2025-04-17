@@ -9,7 +9,7 @@ import Contact from "./Pages/Contact";
 import "./App.css";
 import Booking from "./components/Booking";
 
-import Payment from "./components/Payment";
+import UpiPayment from "./components/Payment";
 
 const App = () => {
   return (
@@ -21,7 +21,7 @@ const App = () => {
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/booking" element={<Booking />} />
-        <Route path="/payment" element={<Payment />} />
+        <Route path="/payment" element={<UpiPayment />} />
       </Routes>
 
       <Footer />

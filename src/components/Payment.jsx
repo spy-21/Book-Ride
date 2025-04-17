@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const UpiPayment = () => {
   const [pickup, setPickup] = useState("");
@@ -8,49 +8,79 @@ const UpiPayment = () => {
   const [upiId, setUpiId] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // Mock function to calculate travel distance (in km)
+  // Simulated distance calculator
   const calculateDistance = () => {
-    // Ideally, use an API to calculate the actual distance between pickup and drop locations
-    return 10; // Mock distance value (10 km for this example)
+    if (!pickup || !drop) return 0;
+    // Fake distance based on character difference for demonstration
+    return Math.max(1, Math.abs(pickup.length - drop.length) + 5);
   };
 
   const calculateAmount = () => {
-    const distance = calculateDistance(); // Get the distance (in km)
-    let rate;
+    const distance = calculateDistance();
+    let rate = 10;
 
-    // Set rate based on vehicle type
     switch (vehicleType) {
-      case "bike":
-        rate = 10; // ₹10 per km
-        break;
       case "auto":
-        rate = 15; // ₹15 per km
+        rate = 15;
         break;
       case "car":
-        rate = 20; // ₹20 per km
+        rate = 20;
         break;
       default:
-        rate = 10; // Default to bike rate
+        rate = 10;
     }
 
-    const totalAmount = distance * rate; // Calculate the total amount
-    setAmount(totalAmount); // Update the amount
+    const totalAmount = distance * rate;
+    setAmount(totalAmount);
   };
 
-  // Submit payment
-  const handleUpiSubmit = (e) => {
+  useEffect(() => {
+    calculateAmount();
+  }, [pickup, drop, vehicleType]);
+
+  const postdata = async () => {
+    if (!upiId || !pickup || !drop || amount === 0) {
+      alert("Please fill all required fields.");
+      return;
+    }
+
+    const bookingData = {
+      pick_loc: pickup,
+      drop_loc: drop,
+      vechile: vehicleType, // Matches backend spelling
+      amount,
+      upi_id: upiId,
+    };
+
+    try {
+      const response = await fetch("http://localhost:3000/booking", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(bookingData),
+      });
+
+      if (response.ok) {
+        console.log(response);
+        alert("Payment Successful!");
+      } else {
+        alert("Payment Failed. Try again.");
+      }
+    } catch (error) {
+      console.error("Error posting data:", error);
+      alert("Something went wrong!");
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const handlePayment = (e) => {
     e.preventDefault();
     setIsProcessing(true);
     setTimeout(() => {
-      setIsProcessing(false);
-      alert("Payment Successful!"); // Simulate successful payment
+      postdata();
     }, 3000);
-  };
-
-  // Update the amount when the vehicle type changes
-  const handleVehicleChange = (e) => {
-    setVehicleType(e.target.value);
-    calculateAmount(); // Recalculate amount when vehicle type changes
   };
 
   return (
@@ -60,8 +90,7 @@ const UpiPayment = () => {
           Make UPI Payment
         </h2>
 
-        {/* Pickup and Drop Location Inputs */}
-        <div className="space-y-4">
+        <form onSubmit={handlePayment} className="space-y-4">
           <div>
             <label htmlFor="pickup" className="block font-medium mb-1">
               Pickup Location:
@@ -69,7 +98,6 @@ const UpiPayment = () => {
             <input
               type="text"
               id="pickup"
-              placeholder="Enter your pickup location"
               value={pickup}
               onChange={(e) => setPickup(e.target.value)}
               required
@@ -84,7 +112,6 @@ const UpiPayment = () => {
             <input
               type="text"
               id="drop"
-              placeholder="Enter your drop location"
               value={drop}
               onChange={(e) => setDrop(e.target.value)}
               required
@@ -92,7 +119,6 @@ const UpiPayment = () => {
             />
           </div>
 
-          {/* Vehicle Type Selection */}
           <div>
             <label htmlFor="vehicleType" className="block font-medium mb-1">
               Select Vehicle Type:
@@ -100,7 +126,7 @@ const UpiPayment = () => {
             <select
               id="vehicleType"
               value={vehicleType}
-              onChange={handleVehicleChange}
+              onChange={(e) => setVehicleType(e.target.value)}
               className="w-full p-3 border rounded focus:outline-none focus:ring focus:ring-blue-400"
             >
               <option value="bike">Bike</option>
@@ -109,7 +135,6 @@ const UpiPayment = () => {
             </select>
           </div>
 
-          {/* Display Amount */}
           <div>
             <label htmlFor="amount" className="block font-medium mb-1">
               Amount to Pay:
@@ -123,7 +148,6 @@ const UpiPayment = () => {
             />
           </div>
 
-          {/* UPI ID Input */}
           <div>
             <label htmlFor="upiId" className="block font-medium mb-1">
               Enter UPI ID:
@@ -139,17 +163,16 @@ const UpiPayment = () => {
             />
           </div>
 
-          {/* Payment Button */}
           <div className="mt-4">
             <button
-              onClick={handleUpiSubmit}
+              type="submit"
               className="w-full bg-blue-600 text-white py-3 rounded hover:bg-blue-700 transition"
               disabled={isProcessing || !upiId || amount === 0}
             >
               {isProcessing ? "Processing..." : "Pay with UPI"}
             </button>
           </div>
-        </div>
+        </form>
 
         <div className="text-center mt-4 text-sm">
           <p>
