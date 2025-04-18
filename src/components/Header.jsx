@@ -35,11 +35,6 @@ const Header = () => {
               Contact
             </Link>
           </li>
-          <li>
-            <Link to="/login" className="hover:text-gray-400">
-              Login
-            </Link>
-          </li>
         </ul>
         <Link to="/booking">
           <button className="px-6 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition duration-300">
