@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Menu, X } from "lucide-react"; // hamburger and close icons
+import { Menu, X } from "lucide-react";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,6 +33,11 @@ const Header = () => {
           <li>
             <Link to="/contact" className="hover:text-gray-400">
               Contact
+            </Link>
+          </li>
+          <li>
+            <Link to="/login" className="hover:text-gray-400">
+              Login
             </Link>
           </li>
         </ul>
